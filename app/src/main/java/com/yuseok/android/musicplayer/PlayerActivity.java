@@ -94,7 +94,7 @@ public class PlayerActivity extends AppCompatActivity {
         // 3. 뷰페이저 아답터 연결
         viewPager.setAdapter( adapter );
         // 4. 뷰페이저 리스너 연결
-        viewPager.addOnPageChangeListener(viewPagerListner);
+        viewPager.addOnPageChangeListener(viewPagerListener);
 
         // 5. 특정 페이지 호출
         Intent intent = getIntent();
@@ -115,23 +115,6 @@ public class PlayerActivity extends AppCompatActivity {
             }
         }
     }
-
-    View.OnClickListener clickListener = new View.OnClickListener(){
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()){
-                case R.id.btnPlay:
-                    play();
-                    break;
-                case R.id.btnRew:
-                    prev();
-                    break;
-                case R.id.btnFf:
-                    next();
-                    break;
-            }
-        }
-    };
 
     private void init() {
         // 뷰페이저로 이동할 경우 플레이어에 세팅된 값을 해제한 후 로직을 실행한다.
@@ -164,6 +147,7 @@ public class PlayerActivity extends AppCompatActivity {
                 next();
             }
         });
+        play();
     }
 
     private void play() {
@@ -258,8 +242,26 @@ public class PlayerActivity extends AppCompatActivity {
         playStatus = STOP;
     }
 
+    View.OnClickListener clickListener = new View.OnClickListener(){
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.btnPlay:
+                    play();
+                    break;
+                case R.id.btnRew:
+                    prev();
+                    break;
+                case R.id.btnFf:
+                    next();
+                    break;
+            }
+        }
+    };
+
+
     // 뷰페이저의 체인지 리스너
-    ViewPager.OnPageChangeListener viewPagerListner = new ViewPager.OnPageChangeListener() {
+    ViewPager.OnPageChangeListener viewPagerListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -270,7 +272,6 @@ public class PlayerActivity extends AppCompatActivity {
             Logger.print("=========정보들어옴", "viewPager Listener");
             PlayerActivity.this.position = position;
             init();
-            play();
         }
 
         @Override
