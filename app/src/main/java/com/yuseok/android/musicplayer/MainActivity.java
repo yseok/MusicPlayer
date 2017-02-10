@@ -9,11 +9,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    private final int REQ_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
             init();
         }
     }
-
-    private final int REQ_CODE = 100;
 
     // 1. 권한체크
     @TargetApi(Build.VERSION_CODES.M) // Target 지정 애너테이션
@@ -51,12 +50,12 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode == REQ_CODE){
-            // 2.1 배열에 넘긴 런타임권한을 체크해서 승인이 됬으면
+            // 2.1 배열에 넘긴 런타임권한을 체크해서 승인이 됐으면
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED ){
                 // 2.2 프로그램 실행
                 init();
             }else{
-                Toast.makeText(this, "권한을 허용하지 않으시면 프로그램을 실행할 수 없습니다.", Toast.LENGTH_LONG).show();
+                Message.show("권한을 허용하지 않으시면 프로그램을 실행할 수 없습니다.",this);
                 // 선택 : 1 종료, 2 권한체크 다시 물어보기
                 finish();
             }
@@ -64,16 +63,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // 데이터를 로드할 함수
-    private void init(){
-        Toast.makeText(this, "프로그램을 실행합니다", Toast.LENGTH_SHORT).show();
+    private void init() {
+        Message.show("프로그램을 실행합니다",this);
 
         // 3.1 데이터를 불러온다
-        ArrayList<Music> datas = DataLoader.get(this);
+        List<Music> datas = null;
+
+        listInit();
+
+    }
+
+    private void listInit() {
 
         // 3.2 리사이클러뷰 세팅
         RecyclerView listView = (RecyclerView) findViewById(R.id.listView);
-        MusicAdapter adapter = new MusicAdapter(datas, this);
+        MusicAdapter adapter = new MusicAdapter(this);
         listView.setAdapter(adapter);
         listView.setLayoutManager(new LinearLayoutManager(this));
+
     }
 }
